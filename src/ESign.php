@@ -13,10 +13,17 @@ class ESign extends Facade
     public const JSON_HEADERS = [
         'Content-Type' => 'application/json'
     ];
+
+    public const ENDPOINTS = [
+        'create_session' => '/ticket',
+        'load_session_data' => '/ticket/%s/data',
+        'set_session_data' => '/ticket/%s/option',
+        'set_key_data' => '/ticket/%s/keyStore',
+        'create_e_sign' => '/ticket/%s/ds/creator',
+        'get_e_signed_doc' => '/ticket/%s/ds/base64Data',
+    ];
+
     private $uuid;
-    /**
-     * @var Dotenv
-     */
     private $dotenv;
     private $rootUrl;
     private $keyPass;
@@ -42,7 +49,7 @@ class ESign extends Facade
             $response = $this->getResponseBody(
                 $this->provider->createRequest(
                     Provider::POST_METHOD,
-                    $this->rootUrl . '/ticket',
+                    $this->rootUrl . self::ENDPOINTS['create_session'],
                     self::JSON_HEADERS
                 )
             );
@@ -65,7 +72,7 @@ class ESign extends Facade
             $response = $this->getResponseBody(
                 $this->provider->createRequest(
                     Provider::POST_METHOD,
-                    $this->rootUrl . '/ticket/' . $this->uuid . '/data',
+                    $this->rootUrl . sprintf(self::ENDPOINTS['load_session_data'], $this->uuid),
                     ESign::JSON_HEADERS,
                     $filePath
                 )
@@ -87,7 +94,7 @@ class ESign extends Facade
             $response = $this->getResponseBody(
                 $this->provider->createRequest(
                     Provider::PUT_METHOD,
-                    $this->rootUrl . '/ticket/' . $this->uuid . '/option',
+                    $this->rootUrl . sprintf(self::ENDPOINTS['set_session_data'], $this->uuid),
                     ESign::JSON_HEADERS,
                     $data
                 )
@@ -109,7 +116,7 @@ class ESign extends Facade
             $response = $this->getResponseBody(
                 $this->provider->createRequest(
                     Provider::PUT_METHOD,
-                    $this->rootUrl . '/ticket/' . $this->uuid . '/keyStore',
+                    $this->rootUrl . sprintf(self::ENDPOINTS['set_key_data'], $this->uuid),
                     ESign::JSON_HEADERS,
                     $keyData
                 )
@@ -130,7 +137,7 @@ class ESign extends Facade
             $response = $this->getResponseBody(
                 $this->provider->createRequest(
                     Provider::POST_METHOD,
-                    $this->rootUrl . '/ticket/' . $this->uuid . '/ds/creator',
+                    $this->rootUrl . sprintf(self::ENDPOINTS['create_e_sign'], $this->uuid),
                     ESign::JSON_HEADERS,
                     '{"keyStorePassword": ' . $this->keyPass . '}'
                 )
@@ -151,14 +158,12 @@ class ESign extends Facade
             $response = $this->getResponseBody(
                 $this->provider->createRequest(
                     Provider::GET_METHOD,
-                    $this->rootUrl . '/ticket/' . $this->uuid . '/ds/base64Data'
+                    $this->rootUrl . sprintf(self::ENDPOINTS['get_e_signed_doc'], $this->uuid)
                 )
             );
         } catch (InvalidResponse $exception) {
             throw new InvalidResponseException($exception->getMessage(), 503, $exception);
         }
-
-        $this->signedFile = $response->base64Data;
 
         return $response;
     }

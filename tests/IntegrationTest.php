@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Dotenv\Dotenv;
 use Transloyd\Services\ESign\{ESign, Facade, Provider};
 
-class FacadeTest extends TestCase
+class IntegrationTest extends TestCase
 {
     private const RESPONSE = [
         'session_created' => 'Створена сесія.',
