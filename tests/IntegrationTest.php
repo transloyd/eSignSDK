@@ -7,11 +7,13 @@ namespace Transloyd\Tests\Services\ESign;
 use GuzzleHttp\Client;
 use Http\Message\MessageFactory\GuzzleMessageFactory;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Dotenv\Dotenv;
 use Transloyd\Services\ESign\{ESign, Facade, Provider};
+use Transloyd\Services\Traits\DotEnvTrait;
 
 class IntegrationTest extends TestCase
 {
+    use DotEnvTrait;
+
     private const RESPONSE = [
         'session_created' => 'Створена сесія.',
         'session_data_uploaded' => 'Дані для сесії успішно завантажені.',
@@ -23,11 +25,8 @@ class IntegrationTest extends TestCase
     protected $facade;
     private $client;
     private $provider;
-    private $dotenv;
     private static $uuid;
-    private $rootUrl;
     private static $base64;
-    private $keyPass;
 
     /**
      * Set up data before test.
@@ -35,11 +34,7 @@ class IntegrationTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-
-        $this->dotenv = new Dotenv();
-        $this->dotenv->load(__DIR__ . '/../.env');
-        $this->rootUrl = $_ENV['ROOT_URL'];
-        $this->keyPass = $_ENV['KEY_PASS'];
+        $this->initDotEnv();
 
         $this->client = new Client();
         $this->provider = new Provider(

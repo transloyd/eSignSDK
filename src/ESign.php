@@ -6,10 +6,12 @@ namespace Transloyd\Services\ESign;
 
 use stdClass;
 use Transloyd\Services\ESign\Exception\{InvalidResponse, InvalidResponseException};
-use Symfony\Component\Dotenv\Dotenv;
+use Transloyd\Services\Traits\DotEnvTrait;
 
 class ESign extends Facade
 {
+    use DotEnvTrait;
+
     public const JSON_HEADERS = [
         'Content-Type' => 'application/json'
     ];
@@ -24,20 +26,12 @@ class ESign extends Facade
     ];
 
     private $uuid;
-    private $dotenv;
-    private $rootUrl;
-    private $keyPass;
     private $signedFile;
 
-    public function __construct(
-        Provider $provider
-    ) {
+    public function __construct(Provider $provider)
+    {
         parent::__construct($provider);
-
-        $this->dotenv = new Dotenv();
-        $this->dotenv->load(__DIR__ . '/../.env');
-        $this->rootUrl = $_ENV['ROOT_URL'];
-        $this->keyPass = $_ENV['KEY_PASS'];
+        $this->initDotEnv();
     }
 
     /**
