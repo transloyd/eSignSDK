@@ -8,6 +8,7 @@ trait DotEnvTrait
 {
     private $rootUrl;
     private $keyPass;
+    private $keyData;
     private $dotEnv;
 
     public function initDotEnv()

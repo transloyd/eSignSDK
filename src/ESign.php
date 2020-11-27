@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Transloyd\Services\ESign;
 
-use stdClass;
 use Transloyd\Services\ESign\Exception\{InvalidResponse, InvalidResponseException};
 use Transloyd\Services\Traits\DotEnvTrait;
 
@@ -35,10 +34,10 @@ class ESign extends Facade
         $this->initDotEnv();
     }
 
-    public function createSession(): stdClass
+    public function createSession(): self
     {
         try {
-            $response = $this->getResponseBody(
+            $this->response = $this->getResponseBody(
                 $this->provider->createRequest(
                     Provider::POST_METHOD,
                     $this->rootUrl . self::ENDPOINTS['create_session'],
@@ -49,33 +48,33 @@ class ESign extends Facade
             throw new InvalidResponseException($exception->getMessage(), 503, $exception);
         }
 
-        $this->uuid = $response->ticketUuid;
+        $this->uuid = $this->response->ticketUuid;
 
-        return $response;
+        return $this;
     }
 
-    public function loadSessionData(string $filePath): stdClass
+    public function loadSessionData(string $fileData): self
     {
         try {
-            $response = $this->getResponseBody(
+            $this->response = $this->getResponseBody(
                 $this->provider->createRequest(
                     Provider::POST_METHOD,
                     $this->rootUrl . sprintf(self::ENDPOINTS['load_session_data'], $this->uuid),
                     ESign::JSON_HEADERS,
-                    $filePath
+                    $fileData
                 )
             );
         } catch (InvalidResponse $exception) {
             throw new InvalidResponseException($exception->getMessage(), 503, $exception);
         }
 
-        return $response;
+        return $this;
     }
 
-    public function setSessionData(string $data): stdClass
+    public function setSessionData(string $data): self
     {
         try {
-            $response = $this->getResponseBody(
+            $this->response = $this->getResponseBody(
                 $this->provider->createRequest(
                     Provider::PUT_METHOD,
                     $this->rootUrl . sprintf(self::ENDPOINTS['set_session_data'], $this->uuid),
@@ -87,13 +86,13 @@ class ESign extends Facade
             throw new InvalidResponseException($exception->getMessage(), 503, $exception);
         }
 
-        return $response;
+        return $this;
     }
 
-    public function setKeyData(string $keyData): stdClass
+    public function setKeyData(string $keyData): self
     {
         try {
-            $response = $this->getResponseBody(
+            $this->response = $this->getResponseBody(
                 $this->provider->createRequest(
                     Provider::PUT_METHOD,
                     $this->rootUrl . sprintf(self::ENDPOINTS['set_key_data'], $this->uuid),
@@ -105,13 +104,13 @@ class ESign extends Facade
             throw new InvalidResponseException($exception->getMessage(), 503, $exception);
         }
 
-        return $response;
+        return $this;
     }
 
-    public function createESign(): stdClass
+    public function createESign(): self
     {
         try {
-            $response = $this->getResponseBody(
+            $this->response = $this->getResponseBody(
                 $this->provider->createRequest(
                     Provider::POST_METHOD,
                     $this->rootUrl . sprintf(self::ENDPOINTS['create_e_sign'], $this->uuid),
@@ -123,13 +122,13 @@ class ESign extends Facade
             throw new InvalidResponseException($exception->getMessage(), 503, $exception);
         }
 
-        return $response;
+        return $this;
     }
 
-    public function getESignedDoc(): stdClass
+    public function getESignedDoc(): self
     {
         try {
-            $response = $this->getResponseBody(
+            $this->response = $this->getResponseBody(
                 $this->provider->createRequest(
                     Provider::GET_METHOD,
                     $this->rootUrl . sprintf(self::ENDPOINTS['get_e_signed_doc'], $this->uuid)
@@ -139,6 +138,6 @@ class ESign extends Facade
             throw new InvalidResponseException($exception->getMessage(), 503, $exception);
         }
 
-        return $response;
+        return $this;
     }
 }

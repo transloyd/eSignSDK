@@ -8,10 +8,16 @@ use stdClass;
 class Facade
 {
     protected $provider;
+    public $response;
 
     public function __construct(Provider $provider)
     {
         $this->provider = $provider;
+    }
+
+    public function getResponse(): stdClass
+    {
+        return $this->response;
     }
 
     public function getResponseBody(RequestInterface $request): stdClass
