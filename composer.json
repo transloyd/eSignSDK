@@ -1,0 +1,42 @@
+{
+    "name": "transloyd/service-esign",
+    "description": "Service facade ESign API",
+    "type": "library",
+    "license": "proprietary",
+    "version": "0.0.1",
+    "prefer-stable": true,
+    "config": {
+        "platform": {
+            "php": "7.3"
+        }
+    },
+    "authors": [
+        {
+            "name": "Anton Kucherevskiy",
+            "email": "a.kucherevskiy@gmail.com"
+        }
+    ],
+    "autoload": {
+        "classmap": [
+            "src/"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Transloyd\\Tests\\Services\\ESign\\": "tests/"
+        }
+    },
+    "require": {
+        "ext-json": "*",
+        "doctrine/collections": "*",
+        "guzzlehttp/guzzle" : "*",
+        "symfony/dotenv": "^5.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8",
+        "php-http/mock-client": "^1.4"
+    },
+    "scripts": {
+        "tests": "phpunit"
+    }
+}
