@@ -31,12 +31,10 @@ class ESign extends Facade
     public function __construct(Provider $provider)
     {
         parent::__construct($provider);
+
         $this->initDotEnv();
     }
 
-    /**
-     * @return stdClass
-     */
     public function createSession(): stdClass
     {
         try {
@@ -56,10 +54,6 @@ class ESign extends Facade
         return $response;
     }
 
-    /**
-     * @param string $filePath
-     * @return stdClass
-     */
     public function loadSessionData(string $filePath): stdClass
     {
         try {
@@ -78,10 +72,6 @@ class ESign extends Facade
         return $response;
     }
 
-    /**
-     * @param string $data
-     * @return stdClass
-     */
     public function setSessionData(string $data): stdClass
     {
         try {
@@ -100,10 +90,6 @@ class ESign extends Facade
         return $response;
     }
 
-    /**
-     * @param string $keyData
-     * @return stdClass
-     */
     public function setKeyData(string $keyData): stdClass
     {
         try {
@@ -122,9 +108,6 @@ class ESign extends Facade
         return $response;
     }
 
-    /**
-     * @return stdClass
-     */
     public function createESign(): stdClass
     {
         try {
@@ -143,9 +126,6 @@ class ESign extends Facade
         return $response;
     }
 
-    /**
-     * @return stdClass
-     */
     public function getESignedDoc(): stdClass
     {
         try {

@@ -8,12 +8,12 @@ trait DotEnvTrait
 {
     private $rootUrl;
     private $keyPass;
-    private $dotenv;
+    private $dotEnv;
 
     public function initDotEnv()
     {
-        $this->dotenv = new Dotenv();
-        $this->dotenv->load(__DIR__ . '/../../.env');
+        $this->dotEnv = new Dotenv();
+        $this->dotEnv->load(__DIR__ . '/../../.env');
         $this->rootUrl = $_ENV['ROOT_URL'];
         $this->keyPass = $_ENV['KEY_PASS'];
     }

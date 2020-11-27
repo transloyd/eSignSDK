@@ -2,13 +2,11 @@
 
 namespace Transloyd\Services\ESign;
 
-use GuzzleHttp\Client;
 use Psr\Http\Message\RequestInterface;
 use stdClass;
 
 class Facade
 {
-    /** @var Client */
     protected $provider;
 
     public function __construct(Provider $provider)
@@ -16,10 +14,6 @@ class Facade
         $this->provider = $provider;
     }
 
-    /**
-     * @param RequestInterface $request
-     * @return stdClass
-     */
     public function getResponseBody(RequestInterface $request): stdClass
     {
         $response = $this->provider->getResponse($request);
