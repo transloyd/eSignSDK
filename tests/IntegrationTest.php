@@ -43,7 +43,7 @@ class IntegrationTest extends TestCase
         $this->facade = new Facade($this->provider);
     }
 
-    public function testCreateSession(): void
+    public function testGetESignedDoc(): void
     {
         $eSign = new ESign($this->provider);
         $eSign = $eSign->createSession();
@@ -63,7 +63,7 @@ class IntegrationTest extends TestCase
         $eSign = $eSign->setKeyData($keyData);
         $this->assertEquals($eSign->getResponse()->message, self::RESPONSE['key_data_uploaded']);
 
-        $eSign = $eSign->createESign();
+        $eSign = $eSign->createESign(123);
         $this->assertEquals($eSign->getResponse()->message, self::RESPONSE['e_sign_init']);
 
         $eSign = $eSign->getESignedDoc();

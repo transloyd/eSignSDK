@@ -35,12 +35,15 @@ public function __constructor( ..., GuzzleHttp\Client $client){
 
 $documentInBase64 = BASE_64_HASH;
 $keyDataInBase64 = BASE_64_HASH;
+$keyPass = $_POST['keyPass'];
 
 $eSign = new ESign($this->provider);
 $eSignManager = new ESignManager($eSign);
 
-$signedDocumentRaw = $eSignManager->getSignedDocumentRaw($documentInBase64, $keyDataInBase64);
+$signedDocumentRaw = $eSignManager->getSignedDocumentRaw($documentInBase64, $keyDataInBase64, $keyPass);
+$signedDocument = base64_decode($signedDocumentRaw);
 
+return $signedDocument;
 ````
 
 But better is to use Service Container (Dependency Injection)!

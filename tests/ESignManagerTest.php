@@ -30,7 +30,7 @@ class ESignManagerTest extends TestCase
         $eSign = new ESign($this->provider);
         $eSignManager = new ESignManager($eSign);
         $this->assertNotEmpty(
-            $eSignManager->getSignedDocumentRaw($documentInBase64, $keyDataInBase64)
+            $eSignManager->getSignedDocumentRaw($documentInBase64, $keyDataInBase64, 123)
         );
     }
 }

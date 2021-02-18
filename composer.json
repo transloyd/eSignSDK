@@ -3,7 +3,7 @@
     "description": "Service facade for ESign API",
     "type": "library",
     "license": "proprietary",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "prefer-stable": true,
     "config": {
         "platform": {

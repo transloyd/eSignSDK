@@ -107,7 +107,7 @@ class ESign extends Facade
         return $this;
     }
 
-    public function createESign(): self
+    public function createESign($keyPass): self
     {
         try {
             $this->response = $this->getResponseBody(
@@ -115,7 +115,7 @@ class ESign extends Facade
                     Provider::POST_METHOD,
                     $this->rootUrl . sprintf(self::ENDPOINTS['create_e_sign'], $this->uuid),
                     ESign::JSON_HEADERS,
-                    '{"keyStorePassword": ' . $this->keyPass . '}'
+                    '{"keyStorePassword": ' . $keyPass . '}'
                 )
             );
         } catch (InvalidResponse $exception) {

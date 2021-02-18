@@ -18,14 +18,14 @@ class ESignManager
         $this->initDotEnv();
     }
 
-    public function getSignedDocumentRaw($fileData, $keyData): ?string
+    public function getSignedDocumentRaw($fileData, $keyData, $keyPass): ?string
     {
         $eSign = $this->eSign
             ->createSession()
             ->loadSessionData($fileData)
             ->setSessionData($this->sessionData)
             ->setKeyData($keyData)
-            ->createESign()
+            ->createESign($keyPass)
             ->getESignedDoc();
 
         return $eSign->getResponse()->base64Data ?? null;
