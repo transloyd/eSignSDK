@@ -35,7 +35,8 @@ class ESignManager
     {
         $eSign = $this->eSign
             ->setUuid($uui)
-            ->loadEsSessionData($fileData)
+            ->setBase64Data($fileData)
+            ->loadEsSessionData()
             ->setVerifierMethod()
             ->getVerifierData();
 

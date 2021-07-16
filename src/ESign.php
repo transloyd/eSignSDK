@@ -44,6 +44,13 @@ class ESign extends Facade
         return $this;
     }
 
+    public function setBase64Data(string $fileData): self
+    {
+        $this->base64Data = $fileData;
+
+        return $this;
+    }
+
     public function createSession(): self
     {
         try {
