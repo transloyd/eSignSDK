@@ -30,4 +30,15 @@ class ESignManager
 
         return $eSign->getResponse()->base64Data ?? null;
     }
+
+    public function checkVerify($uui, $fileData): ?string
+    {
+        $eSign = $this->eSign
+            ->setUuid($uui)
+            ->loadEsSessionData($fileData)
+            ->setVerifierMethod()
+            ->getVerifierData();
+
+        return $eSign->getResponse()->base64Data ?? null;
+    }
 }

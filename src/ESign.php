@@ -37,6 +37,13 @@ class ESign extends Facade
         $this->initDotEnv();
     }
 
+    public function setUuid(string $uuid): self
+    {
+        $this->uuid = $uuid;
+
+        return $this;
+    }
+
     public function createSession(): self
     {
         try {
