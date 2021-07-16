@@ -22,10 +22,13 @@ class ESign extends Facade
         'set_key_data' => '/ticket/%s/keyStore',
         'create_e_sign' => '/ticket/%s/ds/creator',
         'get_e_signed_doc' => '/ticket/%s/ds/base64Data',
+        'verify_esign' => '/ticket/%s/ds/verifier',
+        'load_es_session_data' => '/ticket/%s/ds/data',
     ];
 
     private $uuid;
     private $signedFile;
+    private $base64Data;
 
     public function __construct(Provider $provider)
     {
@@ -134,6 +137,60 @@ class ESign extends Facade
                     $this->rootUrl . sprintf(self::ENDPOINTS['get_e_signed_doc'], $this->uuid)
                 )
             );
+
+            $this->base64Data = $this->response;
+        } catch (InvalidResponse $exception) {
+            throw new InvalidResponseException($exception->getMessage(), 503, $exception);
+        }
+
+        return $this;
+    }
+
+    public function loadEsSessionData(): self
+    {
+        try {
+            $this->response = $this->getResponseBody(
+                $this->provider->createRequest(
+                    Provider::POST_METHOD,
+                    $this->rootUrl . sprintf(self::ENDPOINTS['load_es_session_data'], $this->uuid),
+                    ESign::JSON_HEADERS,
+                    '{"base64Data": "' . $this->base64Data . '"}'
+                )
+            );
+
+        } catch (InvalidResponse $exception) {
+            throw new InvalidResponseException($exception->getMessage(), 503, $exception);
+        }
+
+        return $this;
+    }
+
+    public function setVerifierMethod(): self
+    {
+        try {
+            $this->response = $this->getResponseBody(
+                $this->provider->createRequest(
+                    Provider::POST_METHOD,
+                    $this->rootUrl . sprintf(self::ENDPOINTS['verify_esign'], $this->uuid)
+                )
+            );
+
+        } catch (InvalidResponse $exception) {
+            throw new InvalidResponseException($exception->getMessage(), 503, $exception);
+        }
+
+        return $this;
+    }
+    public function getVerifierData(): self
+    {
+        try {
+            $this->response = $this->getResponseBody(
+                $this->provider->createRequest(
+                    Provider::GET_METHOD,
+                    $this->rootUrl . sprintf(self::ENDPOINTS['verify_esign'], $this->uuid)
+                )
+            );
+
         } catch (InvalidResponse $exception) {
             throw new InvalidResponseException($exception->getMessage(), 503, $exception);
         }
