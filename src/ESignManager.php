@@ -31,15 +31,25 @@ class ESignManager
         return $eSign->getResponse()->base64Data ?? null;
     }
 
-    public function checkVerify($uui, $fileData): ?string
+    public function checkVerifyByUuid($uui, $fileData): ?string
     {
         $eSign = $this->eSign
             ->setUuid($uui)
-            ->setBase64Data($fileData)
-            ->loadEsSessionData()
-            ->setVerifierMethod()
             ->getVerifierData();
 
         return $eSign->getResponse()->base64Data ?? null;
+    }
+
+    public function checkVerify(string $base64): ?\stdClass
+    {
+        $eSign = $this->eSign
+            ->createSession()
+            ->setSessionData($this->sessionData)
+            ->loadEsSessionData($base64)
+            ->setVerifierMethod()
+            ->getVerifierData()
+        ;
+
+        return $eSign->getResponse();
     }
 }

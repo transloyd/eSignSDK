@@ -44,13 +44,6 @@ class ESign extends Facade
         return $this;
     }
 
-    public function setBase64Data(string $fileData): self
-    {
-        $this->base64Data = $fileData;
-
-        return $this;
-    }
-
     public function createSession(): self
     {
         try {
@@ -160,7 +153,7 @@ class ESign extends Facade
         return $this;
     }
 
-    public function loadEsSessionData(): self
+    public function loadEsSessionData(string $base64Data): self
     {
         try {
             $this->response = $this->getResponseBody(
@@ -168,7 +161,7 @@ class ESign extends Facade
                     Provider::POST_METHOD,
                     $this->rootUrl . sprintf(self::ENDPOINTS['load_es_session_data'], $this->uuid),
                     ESign::JSON_HEADERS,
-                    '{"base64Data": "' . $this->base64Data . '"}'
+                    '{"base64Data": "' . ($base64Data ?? $this->base64Data) . '"}'
                 )
             );
 
