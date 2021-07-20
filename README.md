@@ -1,6 +1,6 @@
 # Products Service Facade
 
-![version](https://img.shields.io/badge/version-0.1.3-blue.svg)
+![version](https://img.shields.io/badge/version-0.1.4-blue.svg)
 
 Service facade for API
 
