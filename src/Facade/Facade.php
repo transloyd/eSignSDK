@@ -26,4 +26,9 @@ class Facade
 
         return json_decode((string)$response->getBody(), false, 512, JSON_THROW_ON_ERROR);
     }
+
+    public function getResponseCode(RequestInterface $request): int
+    {
+        return $this->provider->getResponse($request)->getStatusCode();
+    }
 }

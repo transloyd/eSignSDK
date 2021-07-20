@@ -17,9 +17,11 @@ class ESign extends Facade
 
     public const ENDPOINTS = [
         'create_session' => '/ticket',
+        'ticket_session' => '/ticket/%s',
         'load_session_data' => '/ticket/%s/data',
         'set_session_data' => '/ticket/%s/option',
         'set_key_data' => '/ticket/%s/keyStore',
+        'put_key_store' => '/ticket/%s/keyStore/verifier',
         'create_e_sign' => '/ticket/%s/ds/creator',
         'get_e_signed_doc' => '/ticket/%s/ds/base64Data',
         'verify_esign' => '/ticket/%s/ds/verifier',
@@ -63,6 +65,37 @@ class ESign extends Facade
         return $this;
     }
 
+    public function checkSession(): ?int
+    {
+        try {
+            return $this->getResponseCode(
+                $this->provider->createRequest(
+                    Provider::GET_METHOD,
+                    $this->rootUrl . sprintf(self::ENDPOINTS['ticket_session'], $this->uuid)
+                )
+            );
+        } catch (InvalidResponse $exception) {
+            throw new InvalidResponseException($exception->getMessage(), 503, $exception);
+        }
+    }
+
+    public function deleteSession(): self
+    {
+        try {
+            $this->getResponseBody(
+                $this->provider->createRequest(
+                    Provider::DELETE_METHOD,
+                    $this->rootUrl . sprintf(self::ENDPOINTS['ticket_session'], $this->uuid),
+                    self::JSON_HEADERS
+                )
+            );
+        } catch (InvalidResponse $exception) {
+            throw new InvalidResponseException($exception->getMessage(), 503, $exception);
+        }
+
+        return $this;
+    }
+
     public function loadSessionData(string $fileData): self
     {
         try {
@@ -70,8 +103,8 @@ class ESign extends Facade
                 $this->provider->createRequest(
                     Provider::POST_METHOD,
                     $this->rootUrl . sprintf(self::ENDPOINTS['load_session_data'], $this->uuid),
-                    ESign::JSON_HEADERS,
-                    $fileData
+                    self::JSON_HEADERS,
+                    '{"base64Data": "' . $fileData . '"}'
                 )
             );
         } catch (InvalidResponse $exception) {
@@ -88,7 +121,7 @@ class ESign extends Facade
                 $this->provider->createRequest(
                     Provider::PUT_METHOD,
                     $this->rootUrl . sprintf(self::ENDPOINTS['set_session_data'], $this->uuid),
-                    ESign::JSON_HEADERS,
+                    self::JSON_HEADERS,
                     $data
                 )
             );
@@ -106,8 +139,26 @@ class ESign extends Facade
                 $this->provider->createRequest(
                     Provider::PUT_METHOD,
                     $this->rootUrl . sprintf(self::ENDPOINTS['set_key_data'], $this->uuid),
-                    ESign::JSON_HEADERS,
-                    $keyData
+                    self::JSON_HEADERS,
+                    '{"base64Data": "' . $keyData . '"}'
+                )
+            );
+        } catch (InvalidResponse $exception) {
+            throw new InvalidResponseException($exception->getMessage(), 503, $exception);
+        }
+
+        return $this;
+    }
+
+    public function putKeyData(string $keyPassword): self
+    {
+        try {
+            $this->response = $this->getResponseBody(
+                $this->provider->createRequest(
+                    Provider::PUT_METHOD,
+                    $this->rootUrl . sprintf(self::ENDPOINTS['put_key_store'], $this->uuid),
+                    self::JSON_HEADERS,
+                    '{"keyStorePassword": "' . $keyPassword . '"}'
                 )
             );
         } catch (InvalidResponse $exception) {
@@ -124,8 +175,8 @@ class ESign extends Facade
                 $this->provider->createRequest(
                     Provider::POST_METHOD,
                     $this->rootUrl . sprintf(self::ENDPOINTS['create_e_sign'], $this->uuid),
-                    ESign::JSON_HEADERS,
-                    '{"keyStorePassword": ' . $keyPass . '}'
+                    self::JSON_HEADERS,
+                    '{"keyStorePassword": "' . $keyPass . '"}'
                 )
             );
         } catch (InvalidResponse $exception) {
@@ -160,11 +211,10 @@ class ESign extends Facade
                 $this->provider->createRequest(
                     Provider::POST_METHOD,
                     $this->rootUrl . sprintf(self::ENDPOINTS['load_es_session_data'], $this->uuid),
-                    ESign::JSON_HEADERS,
+                    self::JSON_HEADERS,
                     '{"base64Data": "' . ($base64Data ?? $this->base64Data) . '"}'
                 )
             );
-
         } catch (InvalidResponse $exception) {
             throw new InvalidResponseException($exception->getMessage(), 503, $exception);
         }
@@ -181,13 +231,13 @@ class ESign extends Facade
                     $this->rootUrl . sprintf(self::ENDPOINTS['verify_esign'], $this->uuid)
                 )
             );
-
         } catch (InvalidResponse $exception) {
             throw new InvalidResponseException($exception->getMessage(), 503, $exception);
         }
 
         return $this;
     }
+
     public function getVerifierData(): self
     {
         try {
@@ -197,7 +247,6 @@ class ESign extends Facade
                     $this->rootUrl . sprintf(self::ENDPOINTS['verify_esign'], $this->uuid)
                 )
             );
-
         } catch (InvalidResponse $exception) {
             throw new InvalidResponseException($exception->getMessage(), 503, $exception);
         }
